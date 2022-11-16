@@ -174,6 +174,7 @@ def tokenize(wordtoix, text_filepath):
     with open(filepath, "r") as f:
         sentences = f.read().split('\n')
         # a list of indices for a sentence
+        # print(sentences)
         captions = []
         cap_lens = []
         new_sent = []

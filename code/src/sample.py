@@ -66,6 +66,10 @@ def sample_example(wordtoix, netG, text_encoder, args):
     truncation, trunc_rate = args.truncation, args.trunc_rate
     z_dim = args.z_dim
     captions, cap_lens, _ = tokenize(wordtoix, text_filepath)
+    # print(captions)
+    # print("*******\n")
+    # print(cap_lens)
+    # print(device)
     sent_embs, _  = prepare_sample_data(captions, cap_lens, text_encoder, device)
     caption_num = sent_embs.size(0)
     # get noise
@@ -75,6 +79,7 @@ def sample_example(wordtoix, netG, text_encoder, args):
     else:
         noise = torch.randn(batch_size, z_dim).to(device)
     # sampling
+
     with torch.no_grad():
         fakes = []
         for i in tqdm(range(caption_num)):
@@ -119,6 +124,7 @@ def main(args):
 if __name__ == "__main__":
     args = merge_args_yaml(parse_args())
     # set seed
+    # print(args)
     if args.manual_seed is None:
         args.manual_seed = 100
     random.seed(args.manual_seed)
