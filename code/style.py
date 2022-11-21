@@ -1,5 +1,7 @@
 import streamlit as st
 import argparse
+from PIL import Image
+
 
 import numpy as np
 import random
@@ -27,12 +29,13 @@ from lib.perpare import prepare_models
 
 
 ###########  GEN  #############
+
 def get_tokenizer():
     from nltk.tokenize import RegexpTokenizer
     tokenizer = RegexpTokenizer(r'\w+')
     return tokenizer
 
-
+@st.cache
 def tokenize(wordtoix, sentences):
     '''generate images from example sentences'''
     tokenizer = get_tokenizer()
@@ -58,6 +61,7 @@ def tokenize(wordtoix, sentences):
         new_sent.append(sent)    
     return captions, cap_lens, new_sent
 
+@st.cache
 def sample_example(wordtoix, netG, text_encoder, args):
     batch_size, device = args.imgs_per_sent, args.device
     text_filepath, img_save_path = args.example_captions, args.samples_save_dir
@@ -80,7 +84,7 @@ def sample_example(wordtoix, netG, text_encoder, args):
     else:
         noise = torch.randn(batch_size, z_dim).to(device)
     # sampling
-    
+
     with torch.no_grad():
         fakes = []        
         for i in tqdm(range(caption_num)):
@@ -90,7 +94,7 @@ def sample_example(wordtoix, netG, text_encoder, args):
             vutils.save_image(fakes.data, img_name, nrow=4, range=(-1, 1), normalize=True)
             torch.cuda.empty_cache()
 
-
+@st.cache
 def parse_args():
     # Training settings
     parser = argparse.ArgumentParser(description='DF-GAN')
@@ -115,6 +119,7 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+@st.cache
 def build_word_dict(pickle_path):
     with open(pickle_path, 'rb') as f:
         x = pickle.load(f)
@@ -138,38 +143,81 @@ def main(args):
     n_copies = st.slider('Number of Generated Images', min_value=1, max_value=12, value=6, step=1)
 
     if st.button('Generate Image'):
+        my_bar = st.progress(0)
+        placeholder = st.empty()
+        placeholder.info('Loading Model', icon="ℹ️")
+
         time_stamp = get_time_stamp()
         args.example_captions = list(caption.split('\n'))
         # print(caption)
         args.imgs_per_sent = n_copies
         args.samples_save_dir = osp.join(args.samples_save_dir, time_stamp)
+        
+
         if (args.multi_gpus==True) and (get_rank() != 0):
             None
         else:
             mkdir_p(args.samples_save_dir) 
         # prepare data
+
+        for percent_complete in range(15,30):
+            time.sleep(0.1)
+            my_bar.progress(percent_complete + 1)
+
         pickle_path = os.path.join(args.data_dir, 'captions_DAMSM.pickle')
         args.vocab_size, wordtoix = build_word_dict(pickle_path)
         # prepare models
+        
+        
         _, text_encoder, netG, _, _ = prepare_models(args)
+        
         # model_path = osp.join(ROOT_PATH, args.checkpoint)
         model_path = args.checkpoint
+        
         netG = load_netG(netG, model_path, args.multi_gpus, train=False)
         netG.eval()
+
+        
+        placeholder.info('Providing Input', icon="ℹ️")
+        for percent_complete in range(40,60):
+            time.sleep(0.1)
+            my_bar.progress(percent_complete + 1)
         if (args.multi_gpus==True) and (get_rank() != 0):
             None
         else:
             print('Load %s for NetG'%(args.checkpoint))
             print("************ Start sampling ************")
+        
+        
         start_t = time.time()
         sample_example(wordtoix, netG, text_encoder, args)
         end_t = time.time()
+        
         if (args.multi_gpus==True) and (get_rank() != 0):
             None
         else:
             print('*'*40)
             print('Sampling done, %.2fs cost, saved to %s'%(end_t-start_t, args.samples_save_dir))
             print('*'*40)
+
+        
+        placeholder.info('Generating Images', icon="ℹ️")
+        for percent_complete in range(70,100):
+            time.sleep(0.1)
+            my_bar.progress(percent_complete + 1)
+
+        placeholder.empty()
+        my_bar.empty()
+        
+
+
+        st.write("#### Output Image")
+        image = Image.open(args.samples_save_dir+"/sent001.png")
+        st.image(image, width = 700)
+
+
+
+        
 
 
 
