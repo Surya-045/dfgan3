@@ -59,6 +59,9 @@ def get_time_stamp():
 
 
 def load_yaml(filename):
+    print(filename)
+    print("*"*10)
+    print(os.getcwd())
     with open(filename, 'r') as f:
         cfg = edict(yaml.load(f, Loader=yaml.FullLoader))
     return cfg
