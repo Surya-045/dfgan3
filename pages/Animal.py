@@ -144,9 +144,9 @@ def main(args):
     # selected_model = st.selectbox('Select The Model',("CUB Birds","COCO" ))
 
     selected_caption = st.selectbox( 'Select The Caption', 
-    ("The sightseeing boat streams along the river.",
-    'The skiers are standing next to a large crowd.',
-    'A vase of tulips sitting in the middle of a table.'))
+    ('a crow with black body black eyes and black beak on a tree branch.',
+     "ladybug with red back with black spots", 
+    'a brown cow standing next to human'))
 
 
     caption = st.text_input("Enter The Caption", selected_caption)
