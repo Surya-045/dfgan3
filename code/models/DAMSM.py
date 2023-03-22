@@ -135,7 +135,7 @@ class CNN_ENCODER(nn.Module):
         self.Mixed_7b = model.Mixed_7b
         self.Mixed_7c = model.Mixed_7c
 
-        self.emb_features = conv1x1(768, self.nef)
+        self.emb_features = conv1x1(768, self.nef)#(input,output)
         self.emb_cnn_code = nn.Linear(2048, self.nef)
 
     def init_trainable_weights(self):

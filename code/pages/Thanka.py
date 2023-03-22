@@ -28,6 +28,8 @@ from lib.utils import truncated_noise, prepare_sample_data
 from lib.perpare import prepare_models
 
 
+
+
 ###########  GEN  #############
 
 def get_tokenizer():
@@ -98,7 +100,7 @@ def sample_example(wordtoix, netG, text_encoder, args):
 def parse_args():
     # Training settings
     parser = argparse.ArgumentParser(description='DF-GAN')
-    parser.add_argument('--cfg', dest='cfg_file', type=str, default='./cfg/bird.yml',
+    parser.add_argument('--cfg', dest='cfg_file', type=str, default='./cfg/thanka.yml',
                         help='optional config file')
     parser.add_argument('--imgs_per_sent', type=int, default=1,
                         help='the number of images per sentence')
@@ -134,10 +136,14 @@ def build_word_dict(pickle_path):
 def main(args):
     st.title("Text to Image DFGAN Demo")
     st.write('\n\n')
+
+    # selected_model = st.selectbox('Select The Model',("CUB Birds","COCO" ))
+
     selected_caption = st.selectbox( 'Select The Caption', 
-    ('this bird has an orange bill, a white belly and white eyebrows.',
-    'this bird had brown primaries, a brown crown, and white belly.',
-    'this is a grey bodied bird with light grey wings and a white breast.'))
+    ("The sightseeing boat streams along the river.",
+    'The skiers are standing next to a large crowd.',
+    'A vase of tulips sitting in the middle of a table.'))
+
 
     caption = st.text_input("Enter The Caption", selected_caption)
     n_copies = st.slider('Number of Generated Images', min_value=1, max_value=12, value=6, step=1)
@@ -152,6 +158,17 @@ def main(args):
         # print(caption)
         args.imgs_per_sent = n_copies
         args.samples_save_dir = osp.join(args.samples_save_dir, time_stamp)
+        
+        # if selected_model == "COCO":
+        #     args.cfg_file = './cfg/coco.yml'
+        #     print("d"*20)
+        #     parser = argparse.ArgumentParser(description='DF-GAN')
+        #     args = parser.parse_args()
+
+            
+        # else:
+        #     args.cfg_file = './cfg/bird.yml'
+        # print(args)
         
 
         if (args.multi_gpus==True) and (get_rank() != 0):
@@ -222,6 +239,9 @@ def main(args):
 
 
 if __name__ == "__main__":
+
+    st.markdown("Thanka")
+    st.sidebar.markdown("Thanka")
     args = merge_args_yaml(parse_args())
    # print(args)
     

@@ -36,7 +36,7 @@ class NetG(nn.Module):
         return out
 
 
-# 定义鉴别器网络D
+
 class NetD(nn.Module):
     def __init__(self, ndf, imsize=128, ch_size=3):
         super(NetD, self).__init__()
