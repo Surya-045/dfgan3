@@ -47,7 +47,7 @@ def prepare_models(args):
     text_encoder = RNN_ENCODER(n_words, nhidden=args.TEXT.EMBEDDING_DIM)
     state_dict = torch.load(args.TEXT.DAMSM_NAME, map_location='cpu')
     text_encoder = load_model_weights(text_encoder, state_dict, multi_gpus=False)
-    text_encoder.cuda()
+    text_encoder.to(device)
     for p in text_encoder.parameters():
         p.requires_grad = False
     text_encoder.eval()
