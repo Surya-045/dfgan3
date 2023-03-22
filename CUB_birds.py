@@ -107,7 +107,7 @@ def parse_args():
                         help='the number of images per sentence')
     parser.add_argument('--imsize', type=int, default=256,
                         help='image szie')
-    parser.add_argument('--cuda', type=bool, default=True,
+    parser.add_argument('--cuda', type=bool, default=False,
                         help='if use GPU')
     parser.add_argument('--train', type=bool, default=False,
                         help='if training')
