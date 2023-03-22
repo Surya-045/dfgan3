@@ -1,11 +1,11 @@
 **/logs
 **/logs*
-**/data/*
+# **/data/*
 **/checkpoints
 **/imgs*
 **/vals*
 **/samples*
 *.zip
-**/saved_models/*
+# **/saved_models/*
 **/__pycache__**
 DFstenv/
