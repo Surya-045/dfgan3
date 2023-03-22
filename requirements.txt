@@ -99,7 +99,7 @@ terminado==0.17.0
 tinycss2==1.2.1
 torch==1.8.1
 torchaudio==0.8.1
-torchvision==0.9.1+cu101
+torchvision==0.9.1
 tornado==6.2
 tqdm==4.64.1
 traitlets==5.5.0
