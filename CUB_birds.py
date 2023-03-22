@@ -94,7 +94,7 @@ def sample_example(wordtoix, netG, text_encoder, args):
             sent_emb = sent_embs[i].unsqueeze(0).repeat(batch_size, 1)
             fakes = netG(noise, sent_emb)
             img_name = osp.join(img_save_path,'Sent%03d.png'%(i+1))
-            vutils.save_image(fakes.data, img_name, nrow=4, range=(-1, 1), normalize=True)
+            # vutils.save_image(fakes.data, img_name, nrow=4, range=(-1, 1), normalize=True)
             torch.cuda.empty_cache()
     return fakes.data
 

@@ -1,7 +1,7 @@
 CONFIG_NAME: bird
 
 dataset_name: birds
-data_dir: ../data/animals
+data_dir: ./data/animals
 
 gpu_id: 0
 imsize: 256
@@ -30,7 +30,7 @@ sample_times: 10
 npz_path: ../data/birds/npz/bird_val256_FIDK0.npz
 example_captions: ./example_captions/animals.txt
 samples_save_dir: ./samples/animals/
-checkpoint: ./saved_models/animals/pretrained/state_epoch_340.pth
+checkpoint: ./code/saved_models/animals/pretrained/state_epoch_340.pth
 
 save_image: False
 val_save_dir: ./vals/animals/
@@ -39,4 +39,4 @@ TEXT:
     WORDS_NUM: 18
     EMBEDDING_DIM: 256
     CAPTIONS_PER_IMAGE: 10
-    DAMSM_NAME: ../data/animals/DAMSMencoder/text_encoder200.pth
+    DAMSM_NAME: ./data/animals/DAMSMencoder/text_encoder200.pth

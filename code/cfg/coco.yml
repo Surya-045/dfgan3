@@ -1,7 +1,7 @@
 CONFIG_NAME: coco
 
 dataset_name: coco
-data_dir: ../data/coco
+data_dir: ./data/coco
 
 gpu_id: 0
 imsize: 256
@@ -30,7 +30,7 @@ sample_times: 1
 npz_path: ../data/coco/npz/coco_val256_FIDK0.npz
 example_captions: ./example_captions/coco.txt
 samples_save_dir: ./samples/coco/
-checkpoint: ./saved_models/coco/pretrained/state_epoch_290.pth
+checkpoint: ./code/saved_models/coco/pretrained/state_epoch_290.pth
 
 save_image: False
 val_save_dir: ./vals/coco/
@@ -39,5 +39,5 @@ TEXT:
     WORDS_NUM: 18
     EMBEDDING_DIM: 256
     CAPTIONS_PER_IMAGE: 5
-    DAMSM_NAME: ../data/coco/DAMSMencoder/text_encoder100.pth
+    DAMSM_NAME: ./data/coco/DAMSMencoder/text_encoder100.pth
     

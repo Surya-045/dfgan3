@@ -22,10 +22,13 @@ else:
 ROOT_PATH = osp.abspath(osp.join(osp.dirname(osp.abspath(__file__)),  ".."))
 sys.path.insert(0, ROOT_PATH)
 
+cwd = os.getcwd()
+directory = os.path.join(cwd, 'code/lib')
+sys.path.append(cwd)
 
-from lib.utils import mkdir_p, get_rank, merge_args_yaml, get_time_stamp, load_netG
-from lib.utils import truncated_noise, prepare_sample_data
-from lib.perpare import prepare_models
+from code.lib.utils import mkdir_p, get_rank, merge_args_yaml, get_time_stamp, load_netG
+from code.lib.utils import truncated_noise, prepare_sample_data
+from code.lib.perpare import prepare_models
 
 
 
@@ -93,20 +96,21 @@ def sample_example(wordtoix, netG, text_encoder, args):
             sent_emb = sent_embs[i].unsqueeze(0).repeat(batch_size, 1)
             fakes = netG(noise, sent_emb)
             img_name = osp.join(img_save_path,'Sent%03d.png'%(i+1))
-            vutils.save_image(fakes.data, img_name, nrow=4, range=(-1, 1), normalize=True)
+            # vutils.save_image(fakes.data, img_name, nrow=4, range=(-1, 1), normalize=True)
             torch.cuda.empty_cache()
+    return fakes.data
 
 @st.cache
 def parse_args():
     # Training settings
     parser = argparse.ArgumentParser(description='DF-GAN')
-    parser.add_argument('--cfg', dest='cfg_file', type=str, default='./cfg/thanka.yml',
+    parser.add_argument('--cfg', dest='cfg_file', type=str, default='./code/cfg/coco.yml',
                         help='optional config file')
     parser.add_argument('--imgs_per_sent', type=int, default=1,
                         help='the number of images per sentence')
     parser.add_argument('--imsize', type=int, default=256,
                         help='image szie')
-    parser.add_argument('--cuda', type=bool, default=True,
+    parser.add_argument('--cuda', type=bool, default=False,
                         help='if use GPU')
     parser.add_argument('--train', type=bool, default=False,
                         help='if training')
@@ -207,7 +211,7 @@ def main(args):
         
         
         start_t = time.time()
-        sample_example(wordtoix, netG, text_encoder, args)
+        image = sample_example(wordtoix, netG, text_encoder, args)
         end_t = time.time()
         
         if (args.multi_gpus==True) and (get_rank() != 0):
@@ -229,7 +233,9 @@ def main(args):
 
 
         st.write("#### Output Image")
-        image = Image.open(args.samples_save_dir+"/sent001.png")
+        # image = Image.open(args.samples_save_dir+"/sent001.png")
+        grid = vutils.make_grid(image, nrow=4, normalize=True, scale_each=True)
+        image = grid.permute(1, 2, 0).detach().cpu().numpy()
         st.image(image, width = 700)
 
 
@@ -240,8 +246,8 @@ def main(args):
 
 if __name__ == "__main__":
 
-    st.markdown("Thanka")
-    st.sidebar.markdown("Thanka")
+    st.markdown("COCO")
+    st.sidebar.markdown("COCO")
     args = merge_args_yaml(parse_args())
    # print(args)
     
