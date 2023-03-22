@@ -22,10 +22,13 @@ else:
 ROOT_PATH = osp.abspath(osp.join(osp.dirname(osp.abspath(__file__)),  ".."))
 sys.path.insert(0, ROOT_PATH)
 
+cwd = os.getcwd()
+directory = os.path.join(cwd, 'code/lib')
+sys.path.append(cwd)
 
-from lib.utils import mkdir_p, get_rank, merge_args_yaml, get_time_stamp, load_netG
-from lib.utils import truncated_noise, prepare_sample_data
-from lib.perpare import prepare_models
+from code.lib.utils import mkdir_p, get_rank, merge_args_yaml, get_time_stamp, load_netG
+from code.lib.utils import truncated_noise, prepare_sample_data
+from code.lib.perpare import prepare_models
 
 
 ###########  GEN  #############
@@ -98,7 +101,7 @@ def sample_example(wordtoix, netG, text_encoder, args):
 def parse_args():
     # Training settings
     parser = argparse.ArgumentParser(description='DF-GAN')
-    parser.add_argument('--cfg', dest='cfg_file', type=str, default='./cfg/bird.yml',
+    parser.add_argument('--cfg', dest='cfg_file', type=str, default='./code/cfg/bird.yml',
                         help='optional config file')
     parser.add_argument('--imgs_per_sent', type=int, default=1,
                         help='the number of images per sentence')
@@ -180,7 +183,9 @@ def main(args):
             time.sleep(0.1)
             my_bar.progress(percent_complete + 1)
 
+        # print(os.getcwd())
         pickle_path = os.path.join(args.data_dir, 'captions_DAMSM.pickle')
+        
         args.vocab_size, wordtoix = build_word_dict(pickle_path)
         # prepare models
         

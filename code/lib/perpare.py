@@ -19,9 +19,13 @@ from torchvision.utils import save_image, make_grid
 from torch.utils.data import DataLoader, random_split
 from torch.utils.data.distributed import DistributedSampler
 
-from lib.utils import mkdir_p, get_rank, load_model_weights
-from models.DAMSM import RNN_ENCODER, CNN_ENCODER
-from models.GAN import NetG, NetD, NetC
+cwd = os.getcwd()
+directory = os.path.join(cwd, 'code/lib')
+sys.path.append(cwd)
+
+from code.lib.utils import mkdir_p, get_rank, load_model_weights
+from code.models.DAMSM import RNN_ENCODER, CNN_ENCODER
+from code.models.GAN import NetG, NetD, NetC
 
 ###########   preparation   ############
 def prepare_models(args):
