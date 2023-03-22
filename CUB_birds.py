@@ -96,6 +96,7 @@ def sample_example(wordtoix, netG, text_encoder, args):
             img_name = osp.join(img_save_path,'Sent%03d.png'%(i+1))
             vutils.save_image(fakes.data, img_name, nrow=4, range=(-1, 1), normalize=True)
             torch.cuda.empty_cache()
+    return fakes.data
 
 @st.cache
 def parse_args():
@@ -211,7 +212,7 @@ def main(args):
         
         
         start_t = time.time()
-        sample_example(wordtoix, netG, text_encoder, args)
+        image = sample_example(wordtoix, netG, text_encoder, args)
         end_t = time.time()
         
         if (args.multi_gpus==True) and (get_rank() != 0):
@@ -233,7 +234,9 @@ def main(args):
 
 
         st.write("#### Output Image")
-        image = Image.open(args.samples_save_dir+"/sent001.png")
+        # image = Image.open(args.samples_save_dir+"/sent001.png")
+        grid = vutils.make_grid(image, nrow=4, normalize=True, scale_each=True)
+        image = grid.permute(1, 2, 0).detach().cpu().numpy()
         st.image(image, width = 700)
 
 
